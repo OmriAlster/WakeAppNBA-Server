@@ -1,21 +1,29 @@
 {
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongoose": "^8.2.3",
+    "mongoose": "^8.3.1",
     "nodemon": "^3.1.0",
     "winston": "^3.13.0"
   },
   "name": "wakeappnba-server",
   "version": "1.0.0",
-  "main": "index.js",
-  "devDependencies": {},
+  "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.ts",
+    "build": "tsc",
+    "debug": "node --trace-warnings --inspect src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "ts-node": "^10.9.2"
+  }
 }
