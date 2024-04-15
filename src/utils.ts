@@ -3,6 +3,11 @@ import Game from './models/game';
 import { BDLGame } from './dtos/balldontlieDtos';
 import { BDLGametoGameDto, NBALiveGametoGameDto } from './dtos/dtoUtils';
 import { NBAGame, NBALiveData, NBAScoreboard } from './dtos/nbaLiveApiDtos';
+import {
+	closeConnectionForGame,
+	sendGameUpdate,
+	startSSEForGame,
+} from './server-side-events';
 
 let currDate: string | undefined = undefined;
 
@@ -39,10 +44,12 @@ const setLiveData = async (scoreboard: NBAScoreboard) => {
 			console.log(
 				`update ${liveGame.homeTeam.teamTricode} - ${liveGame.awayTeam.teamTricode} from ${currGame?.gameTime.gameStatusText} to ${liveGame.gameStatusText}, ${liveGame.homeTeam.score} : ${liveGame.awayTeam.score}`,
 			);
-			await Game.findByIdAndUpdate(
+			const t = await Game.findByIdAndUpdate(
 				currGame?._id,
 				NBALiveGametoGameDto(liveGame, scoreboard.gameDate),
 			);
+
+			currGame?.gameId && sendGameUpdate(currGame?.gameId.toString(), t);
 		}
 		// update db
 		// sse that changed
@@ -56,8 +63,8 @@ const updateAllRemainingGames = async () => {
 		const existedGame = await Game.findOne({ gameId: game.id });
 		if (!existedGame) {
 			const createdGame = await Game.create(BDLGametoGameDto(game));
+			console.log('bad!!');
 		}
-		console.log('bad!!');
 	});
 };
 

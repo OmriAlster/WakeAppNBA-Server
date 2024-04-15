@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import * as dotenv from 'dotenv';
 import { runInterval } from './utils';
+import { startSSEForGame } from './server-side-events';
 
 const app: Application = express();
 
@@ -27,3 +28,4 @@ app.listen(PORT, () => {
 });
 
 runInterval();
+startSSEForGame(app);
