@@ -1,9 +1,9 @@
 // routes/userRoutes.ts
 import { Router } from 'express';
-import userController from '../controllers/userController';
+import gamesController from '../controllers/gamesController';
 
 const router: Router = Router();
 
-router.get('/', userController.getAllUsers);
+router.get('/', gamesController.getGamesBetweenDates);
 
 export default router;

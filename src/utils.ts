@@ -62,8 +62,11 @@ const updateAllRemainingGames = async () => {
 	games.forEach(async (game) => {
 		const existedGame = await Game.findOne({ gameId: game.id });
 		if (!existedGame) {
-			const createdGame = await Game.create(BDLGametoGameDto(game));
-			console.log('bad!!');
+			await Game.create(BDLGametoGameDto(game));
+			console.log('create game ' + game.id);
+		} else if (!existedGame.liveId) {
+			await Game.findByIdAndUpdate(existedGame._id, BDLGametoGameDto(game))
+			console.log('update game ' + game.id)
 		}
 	});
 };

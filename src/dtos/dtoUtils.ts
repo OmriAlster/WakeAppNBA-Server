@@ -16,11 +16,11 @@ export const BDLGametoGameDto = (bdlGame: BDLGame): IGame => {
 			period: bdlGame.period,
 		},
 		homeTeam: {
-			teamId: bdlGame.home_team.id,
+			teamId: BDLtoNBALiveTeamId[bdlGame.home_team.id],
 			teamName: bdlGame.home_team.abbreviation,
 		},
 		awayTeam: {
-			teamId: bdlGame.visitor_team.id,
+			teamId: BDLtoNBALiveTeamId[bdlGame.visitor_team.id],
 			teamName: bdlGame.visitor_team.abbreviation,
 		},
 	} as IGame;
@@ -59,3 +59,36 @@ const createStatusText = (dateString: string) => {
 		hourCycle: 'h23', // Use 24-hour format
 	});
 };
+
+const BDLtoNBALiveTeamId : Record<number,number> = {
+	1 : 1610612737,
+	2 : 1610612738,
+	3: 1610612751,
+	4: 1610612766,
+	5: 1610612741,
+	6: 1610612742,
+	7: 1610612739,
+	8: 1610612743,
+	9: 1610612765,
+	10: 1610612744,
+	11: 1610612745,
+	12: 1610612754,
+	13: 1610612746,
+	14: 1610612747,
+	15: 1610612763,
+	16: 1610612748,
+	17: 1610612749,
+	18: 1610612750,
+	19: 1610612740,
+	20: 1610612752,
+	21: 1610612760,
+	22: 1610612753,
+	23: 1610612755,
+	24: 1610612756,
+	25: 1610612757,
+	26: 1610612758,
+	27: 1610612759,
+	28: 1610612761,
+	29: 1610612762,
+	30: 1610612764
+}

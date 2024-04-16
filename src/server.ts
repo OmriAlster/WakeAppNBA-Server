@@ -1,10 +1,11 @@
 // server.ts
 import express, { Application } from 'express';
 import mongoose from 'mongoose';
-import userRoutes from './routes/userRoutes';
+import userRoutes from './routes/gamesRoutes';
 import * as dotenv from 'dotenv';
 import { runInterval } from './utils';
 import { startSSEForGame } from './server-side-events';
+import cors from 'cors';
 
 const app: Application = express();
 
@@ -20,8 +21,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
 	console.log('Connected to MongoDB');
 });
-
-app.use('/api/users', userRoutes);
+app.use(cors())
+app.use('/api/games', userRoutes);
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
