@@ -10,7 +10,7 @@ export const BDLGametoGameDto = (bdlGame: BDLGame): IGame => {
 			gameStatusText: createStatusText(bdlGame.status),
 			gameTimeUTC:
 				new Date(bdlGame.status).toString() === 'Invalid Date'
-					? undefined
+					? new Date(bdlGame.date)
 					: new Date(bdlGame.status),
 			gameClock: bdlGame.time,
 			period: bdlGame.period,
@@ -18,10 +18,12 @@ export const BDLGametoGameDto = (bdlGame: BDLGame): IGame => {
 		homeTeam: {
 			teamId: BDLtoNBALiveTeamId[bdlGame.home_team.id],
 			teamName: bdlGame.home_team.abbreviation,
+			score : bdlGame.home_team_score
 		},
 		awayTeam: {
 			teamId: BDLtoNBALiveTeamId[bdlGame.visitor_team.id],
 			teamName: bdlGame.visitor_team.abbreviation,
+			score : bdlGame.visitor_team_score
 		},
 	} as IGame;
 };
@@ -53,11 +55,12 @@ export const NBALiveGametoGameDto = (
 };
 
 const createStatusText = (dateString: string) => {
-	return new Date(dateString).toLocaleTimeString('en-US', {
+	const gameDate = new Date(dateString);
+	return gameDate.toString() !== 'Invalid Date' ? gameDate.toLocaleTimeString('en-US', {
 		hour: '2-digit',
 		minute: '2-digit',
 		hourCycle: 'h23', // Use 24-hour format
-	});
+	}) : dateString;
 };
 
 const BDLtoNBALiveTeamId : Record<number,number> = {

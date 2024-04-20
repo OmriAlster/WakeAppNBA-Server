@@ -21,10 +21,10 @@ interface GameTime {
 interface Team {
 	teamId: number;
 	teamName: string;
-	score?: number;
+	score: number;
 }
 
-enum GameStatus {
+export enum GameStatus {
 	Before = 1,
 	During = 2,
 	Final = 3,
@@ -45,12 +45,12 @@ const GameSchema: Schema<IGame> = new Schema({
 	homeTeam: {
 		teamId: { type: Number, required: true },
 		teamName: { type: String, required: true },
-		score: { type: Number },
+		score: { type: Number, required: true },
 	},
 	awayTeam: {
 		teamId: { type: Number, required: true },
 		teamName: { type: String, required: true },
-		score: { type: Number },
+		score: { type: Number, required: true },
 	},
 });
 

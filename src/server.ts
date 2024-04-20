@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import { runInterval } from './utils';
 import { startSSEForGame } from './server-side-events';
 import cors from 'cors';
+import { startSSEForGameStarted } from './sseGameStarted';
 
 const app: Application = express();
 
@@ -30,3 +31,4 @@ app.listen(PORT, () => {
 
 runInterval();
 startSSEForGame(app);
+startSSEForGameStarted(app);
