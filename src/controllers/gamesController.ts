@@ -1,40 +1,32 @@
 // controllers/userController.ts
 import { Request, Response } from 'express';
-import Game, { IGame } from '../models/game';
-import axios, { AxiosResponse } from 'axios';
-import { fetchTodayScoreboard } from '../utils';
-import moment from 'moment-timezone';
+import Game from '../models/game';
 
-const getGamesBetweenDates = async (req: Request, res: Response): Promise<void> => {
+const getGamesBetweenDates = async (
+	req: Request,
+	res: Response,
+): Promise<void> => {
 	try {
-		const { startDate, endDate, timeZone } = req.query; // Assuming timeZone is passed as a query parameter
-		if (!startDate || !endDate || !timeZone) {
-			res.status(400).json({ error: 'startDate, endDate, and timeZone are required' });
-			return;
-		}
+		const { startDate, endDate } = req.query; // Assuming timeZone is passed as a query parameter
+		let query: any = {};
 
-		// Convert user's local time to UTC for querying the database
-		const startUtc = moment.tz(startDate, timeZone as string).utc().toDate();
-		const endUtc = moment.tz(endDate, timeZone as string).endOf('day').utc().toDate();
-		console.log(startUtc, endUtc)
-		const games: IGame[] = await Game.find({
-			'gameTime.gameTimeUTC': { $gte: startUtc, $lte: endUtc }
-		});
-		// Convert game times to user's local time zone for response
-		const gamesByDate: { [key: string]: IGame[] } = {};
-		games.forEach((game: IGame) => {
-			const gameDate = moment(game.gameTime.gameTimeUTC).tz(timeZone as string).format('YYYY-MM-DD');
-			if (!gamesByDate[gameDate]) {
-				gamesByDate[gameDate] = [];
-			}
-			gamesByDate[gameDate].push(game);
-		});
+		if (startDate) {
+			query['gameTime.gameDate'] = { ...query['gameTime.gameDate'], $gte: startDate };
+		  }
+		  
+		  if (endDate) {
+			query['gameTime.gameDate'] = { ...query['gameTime.gameDate'], $lte: endDate };
+		  }
 
-		res.json(gamesByDate);
+		const games = await Game.find(query)
+			.sort({ 'gameTime.gameTimeUTC': 1 })
+			.exec();
+
+		res.json(games);
 	} catch (error) {
 		console.error('Error fetching games:', error);
 		res.status(500).json({ error: 'Failed to fetch games' });
 	}
 };
 
-export default {getGamesBetweenDates};
+export default { getGamesBetweenDates };

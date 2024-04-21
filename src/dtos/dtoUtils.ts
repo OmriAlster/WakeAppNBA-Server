@@ -1,4 +1,5 @@
-import { IGame } from '../models/game';
+import moment from 'moment-timezone';
+import { GameStatus, IGame } from '../models/game';
 import { BDLGame } from './balldontlieDtos';
 import { NBAGame } from './nbaLiveApiDtos';
 
@@ -14,16 +15,17 @@ export const BDLGametoGameDto = (bdlGame: BDLGame): IGame => {
 					: new Date(bdlGame.status),
 			gameClock: bdlGame.time,
 			period: bdlGame.period,
+			gameStatus: GameStatus.Before,
 		},
 		homeTeam: {
 			teamId: BDLtoNBALiveTeamId[bdlGame.home_team.id],
 			teamName: bdlGame.home_team.abbreviation,
-			score : bdlGame.home_team_score
+			score: bdlGame.home_team_score,
 		},
 		awayTeam: {
 			teamId: BDLtoNBALiveTeamId[bdlGame.visitor_team.id],
 			teamName: bdlGame.visitor_team.abbreviation,
-			score : bdlGame.visitor_team_score
+			score: bdlGame.visitor_team_score,
 		},
 	} as IGame;
 };
@@ -56,21 +58,19 @@ export const NBALiveGametoGameDto = (
 
 const createStatusText = (dateString: string) => {
 	const gameDate = new Date(dateString);
-	return gameDate.toString() !== 'Invalid Date' ? gameDate.toLocaleTimeString('en-US', {
-		hour: '2-digit',
-		minute: '2-digit',
-		hourCycle: 'h23', // Use 24-hour format
-	}) : dateString;
+	return gameDate.toString() !== 'Invalid Date'
+		? 'TBD'
+		: dateString;
 };
 
-const BDLtoNBALiveTeamId : Record<number,number> = {
-	1 : 1610612737,
-	2 : 1610612738,
+const BDLtoNBALiveTeamId: Record<number, number> = {
+	1: 1610612737,
+	2: 1610612738,
 	3: 1610612751,
 	4: 1610612766,
 	5: 1610612741,
-	6: 1610612742,
-	7: 1610612739,
+	6: 1610612739,
+	7: 1610612742,
 	8: 1610612743,
 	9: 1610612765,
 	10: 1610612744,
@@ -93,5 +93,5 @@ const BDLtoNBALiveTeamId : Record<number,number> = {
 	27: 1610612759,
 	28: 1610612761,
 	29: 1610612762,
-	30: 1610612764
-}
+	30: 1610612764,
+};

@@ -10,11 +10,11 @@ export interface IGame extends Document {
 }
 
 interface GameTime {
-	gameStatus?: GameStatus;
+	gameStatus: GameStatus;
 	gameStatusText: string;
-	period?: number;
+	period: number;
 	gameClock?: string;
-	gameTimeUTC?: Date;
+	gameTimeUTC: Date;
 	gameDate: string;
 }
 
@@ -30,28 +30,26 @@ export enum GameStatus {
 	Final = 3,
 }
 
+const TeamSchema: Schema<Team> = new Schema({
+	teamId: { type: Number, required: true },
+	teamName: { type: String, required: true },
+	score: { type: Number, required: true },
+});
+
 // Define schema
 const GameSchema: Schema<IGame> = new Schema({
 	gameId: { type: Number, required: true, unique: true },
 	liveId: { type: String },
 	gameTime: {
-		gameStatus: { type: Number },
+		gameStatus: { type: Number, required: true },
 		gameStatusText: { type: String, required: true },
-		period: { type: Number },
+		period: { type: Number, required: true },
 		gameClock: { type: String },
-		gameTimeUTC: { type: Date },
+		gameTimeUTC: { type: Date, required: true },
 		gameDate: { type: String, required: true },
 	},
-	homeTeam: {
-		teamId: { type: Number, required: true },
-		teamName: { type: String, required: true },
-		score: { type: Number, required: true },
-	},
-	awayTeam: {
-		teamId: { type: Number, required: true },
-		teamName: { type: String, required: true },
-		score: { type: Number, required: true },
-	},
+	homeTeam: TeamSchema,
+	awayTeam: TeamSchema,
 });
 
 // Export model
